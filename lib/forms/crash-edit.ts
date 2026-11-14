@@ -213,3 +213,58 @@ export function parsePublish(raw: Raw): Parsed<{ version: number; reason: string
   const publish = first(raw.publish) === "true";
   return Object.keys(errors).length > 0 ? { ok: false, errors } : { ok: true, value: { version: v, reason: why, publish } };
 }
+
+// --- Create a new crash (staff) -------------------------------------------------------------
+
+export interface CrashCreateInput {
+  reason: string;
+  titleEn: string | null;
+  titleNp: string | null;
+  occurredOn: string;
+  occurredTime: string | null;
+  placeNameEn: string | null;
+  placeNameNp: string | null;
+  districtId: string;
+  deaths: number;
+  injured: number | null;
+  vehicles: (typeof VEHICLE_TYPES)[number][];
+}
+
+/** Like parseCrashFacts but without a version field — used when creating a brand-new crash. */
+export function parseCrashCreate(raw: Raw, now: Date = new Date()): Parsed<CrashCreateInput> {
+  const errors: Errors = {};
+  const titleEn = text(raw, "titleEn", 200, errors);
+  const titleNp = text(raw, "titleNp", 200, errors);
+  const placeNameEn = text(raw, "placeNameEn", 200, errors);
+  const placeNameNp = text(raw, "placeNameNp", 200, errors);
+
+  const occurredOn = first(raw.occurredOn).trim();
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(occurredOn) || Number.isNaN(Date.parse(`${occurredOn}T00:00:00Z`)) || new Date(`${occurredOn}T00:00:00Z`).toISOString().slice(0, 10) !== occurredOn) {
+    errors.occurredOn = "date";
+  } else if (occurredOn > todayInNepal(now)) {
+    errors.occurredOn = "future";
+  } else if (occurredOn < "2000-01-01") {
+    errors.occurredOn = "date";
+  }
+
+  const rawTime = first(raw.occurredTime).trim();
+  let occurredTime: string | null = null;
+  if (rawTime !== "") {
+    if (/^([01]\d|2[0-3]):[0-5]\d$/.test(rawTime)) occurredTime = rawTime;
+    else errors.occurredTime = "time";
+  }
+
+  const districtId = first(raw.districtId).trim();
+  if (!UUID.test(districtId)) errors.districtId = "required";
+
+  const deaths = whole(raw, "deaths", 0, 1000, errors, true);
+  const injured = whole(raw, "injured", 0, 5000, errors, false);
+
+  const vehicleValues = (Array.isArray(raw.vehicles) ? raw.vehicles : raw.vehicles ? [raw.vehicles] : []).map((v) => v.trim()).filter(Boolean);
+  const vehicles = [...new Set(vehicleValues)] as (typeof VEHICLE_TYPES)[number][];
+  if (vehicles.some((v) => !(VEHICLE_TYPES as readonly string[]).includes(v))) errors.vehicles = "invalid";
+
+  const why = reason(raw, errors);
+  if (Object.keys(errors).length > 0) return { ok: false, errors };
+  return { ok: true, value: { reason: why, titleEn, titleNp, occurredOn, occurredTime, placeNameEn, placeNameNp, districtId, deaths: deaths as number, injured, vehicles } };
+}

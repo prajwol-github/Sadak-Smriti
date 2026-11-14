@@ -4,7 +4,7 @@ import {
   deleteCrashVehicles, crashForEdit, deletePerson, insertPerson, killedPersonCount, lockCrash, lockPerson, newsSourceCount, pendingSubmissionCount, revisionById,
   setCrashPublication, updateCrashFacts, updatePerson,
 } from "@/lib/db/queries/crash-edit";
-import { crashBySourceUrl, districtForReport, insertAudit, insertCrashVehicles, insertRevision, insertSource, sourceByUrl } from "@/lib/db/queries/reports";
+import { crashBySourceUrl, districtForReport, insertAudit, insertCrashVehicles, insertDraftCrash, insertRevision, insertSource, sourceByUrl } from "@/lib/db/queries/reports";
 import { attachFollowUpSource, bumpCrashVersion, crashSourceCount, districtSlug } from "@/lib/db/queries/submissions";
 import type { CrashFactsInput, NewsLinkInput, PersonInput } from "@/lib/forms/crash-edit";
 import { effectiveNameVisibility } from "@/lib/forms/crash-edit";
@@ -19,7 +19,7 @@ import { can, type Actor } from "@/lib/policy/can";
  */
 
 export type EditResult =
-  | { status: "saved"; personId?: string }
+  | { status: "saved"; personId?: string; crashId?: string }
   | { status: "conflict" }
   | { status: "invalid"; errors: Record<string, string> }
   | { status: "refused"; reason: "not_permitted" | "not_found" | "closed" | "unsupported" };
@@ -288,4 +288,63 @@ export async function restoreVersion(tx: Executor, actor: Actor, crashId: string
     return { status: "saved", personId: created.id };
   }
   return refused("unsupported");
+}
+
+// --- Create a new crash (staff) -------------------------------------------------------------
+
+export interface CreateCrashInput {
+  reason: string;
+  titleEn: string | null;
+  titleNp: string | null;
+  occurredOn: string;
+  occurredTime: string | null;
+  placeNameEn: string | null;
+  placeNameNp: string | null;
+  districtId: string;
+  deaths: number;
+  injured: number | null;
+  vehicles: (typeof import("@/lib/forms/crash-edit").VEHICLE_TYPES)[number][];
+}
+
+/** Staff-direct crash creation (ADR 0008). Creates a draft, writes the first revision + audit. */
+export async function createCrash(tx: Executor, actor: Actor, input: CreateCrashInput): Promise<EditResult> {
+  if (!allowed(actor, "create_crash")) return refused("not_permitted");
+  const [district] = await districtForReport.build(tx, { districtId: input.districtId });
+  if (!district) return invalid("districtId", "invalid");
+
+  const slug = `draft-${randomBytes(6).toString("hex")}`;
+  const [crash] = await insertDraftCrash.build(tx, {
+    slug, occurredOn: input.occurredOn, occurredTime: input.occurredTime,
+    provinceId: district.provinceId, districtId: input.districtId, localUnitId: null,
+    placeName: input.placeNameEn ?? input.placeNameNp ?? null,
+    placeNameIsNepali: !input.placeNameEn && !!input.placeNameNp,
+    deaths: input.deaths, injured: input.injured ?? 0, location: null,
+  });
+
+  // Persist both EN and NP titles separately — insertDraftCrash uses a single placeName field;
+  // update the row immediately with the bilingual fields.
+  if (input.titleEn || input.titleNp || (input.placeNameEn && input.placeNameNp)) {
+    await updateCrashFacts.build(tx, {
+      id: crash.id, version: crash.version,
+      titleEn: input.titleEn, titleNp: input.titleNp,
+      occurredOn: input.occurredOn, occurredTime: input.occurredTime,
+      placeNameEn: input.placeNameEn, placeNameNp: input.placeNameNp,
+      districtId: input.districtId, provinceId: district.provinceId,
+      deaths: input.deaths, injured: input.injured,
+    });
+  }
+
+  if (input.vehicles.length) {
+    await insertCrashVehicles.build(tx, { rows: input.vehicles.map((type) => ({ crashId: crash.id, type })) });
+  }
+
+  const after = {
+    titleEn: input.titleEn, titleNp: input.titleNp, occurredOn: input.occurredOn, occurredTime: input.occurredTime,
+    placeNameEn: input.placeNameEn, placeNameNp: input.placeNameNp, districtId: input.districtId,
+    provinceId: district.provinceId, deaths: input.deaths, injured: input.injured,
+    status: "draft", slug, vehicles: [...input.vehicles].sort(),
+  };
+  await insertRevision.build(tx, { entityType: "crash", entityId: crash.id, version: crash.version, data: after, submissionId: null, actorId: actor.id, reason: input.reason });
+  await insertAudit.build(tx, { actorId: actor.id, action: "crash.create", targetType: "crash", targetId: crash.id, after: { reason: input.reason }, ipHash: null });
+  return { status: "saved", crashId: crash.id };
 }

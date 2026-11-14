@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { effectiveNameVisibility, parseCrashFacts, parseNewsLink, parsePerson, parsePublish, parseReasonOnly, type Raw } from "./crash-edit";
+import { effectiveNameVisibility, parseCrashCreate, parseCrashFacts, parseNewsLink, parsePerson, parsePublish, parseReasonOnly, type Raw } from "./crash-edit";
 
 // Every value here is invented.
 const NOW = new Date("2026-11-14T06:00:00Z");
@@ -43,6 +43,40 @@ describe("parseCrashFacts", () => {
 
   it("refuses an unknown vehicle", () => {
     expect(errorsOf(parseCrashFacts(facts({ vehicles: ["bus", "spaceship"] }), NOW)).vehicles).toBe("invalid");
+  });
+});
+
+describe("parseCrashCreate", () => {
+  it("accepts valid crash create data without version field", () => {
+    const rawData = facts({ placeNameEn: "Example bazaar" });
+    delete rawData.version;
+    const r = parseCrashCreate(rawData, NOW);
+    expect(r.ok).toBe(true);
+    if (r.ok) {
+      expect(r.value).toEqual({
+        reason: "Corrected from the police report",
+        titleEn: "Bus fell off the road",
+        titleNp: null,
+        occurredOn: "2026-11-12",
+        occurredTime: "05:45",
+        placeNameEn: "Example bazaar",
+        placeNameNp: null,
+        districtId: DISTRICT,
+        deaths: 3,
+        injured: 5,
+        vehicles: ["bus", "motorcycle"],
+      });
+    }
+  });
+
+  it("fails if required fields are missing", () => {
+    const r = parseCrashCreate({ reason: "abc" }, NOW);
+    expect(r.ok).toBe(false);
+    if (!r.ok) {
+      expect(r.errors.occurredOn).toBe("date");
+      expect(r.errors.districtId).toBe("required");
+      expect(r.errors.deaths).toBe("required");
+    }
   });
 });
 

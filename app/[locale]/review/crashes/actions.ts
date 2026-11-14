@@ -6,13 +6,13 @@ import * as z from "zod";
 import { currentActor } from "@/lib/auth/session";
 import { transaction } from "@/lib/db/queries/run";
 import {
-  parseCrashFacts, parseNewsLink, parsePerson, parsePublish, parseReasonOnly, type Raw,
+  parseCrashCreate, parseCrashFacts, parseNewsLink, parsePerson, parsePublish, parseReasonOnly, type Raw,
 } from "@/lib/forms/crash-edit";
 import type { EditState } from "@/lib/forms/edit-state";
 import { routing } from "@/lib/i18n/routing";
 import { can, type Actor } from "@/lib/policy/can";
 import {
-  addNewsLink, removePerson, restoreVersion, saveCrashFacts, savePerson, setCrashPublished, type EditResult,
+  addNewsLink, createCrash, removePerson, restoreVersion, saveCrashFacts, savePerson, setCrashPublished, type EditResult,
 } from "@/lib/workflow/edit-crash";
 
 /**
@@ -118,4 +118,16 @@ export async function restoreForm(fd: FormData): Promise<void> {
   if (!actor || !revisionId.success || !parsed.ok) redirect(`${back}?result=refused`);
   const r = await transaction((tx) => restoreVersion(tx, actor, crashId, revisionId.data, parsed.value.reason));
   redirect(`${back}?result=${r.status === "saved" ? "restored" : r.status === "invalid" ? Object.values(r.errors)[0] : r.status === "refused" ? "refused" : "conflict"}`);
+}
+
+/** Staff crash creation. Parses the form, creates the crash, then redirects to its edit page. */
+export async function createCrashAction(_prev: EditState, fd: FormData): Promise<EditState> {
+  const actor = await staff("create_crash");
+  if (!actor) return refused;
+  const parsed = parseCrashCreate(raw(fd));
+  if (!parsed.ok) return { status: "invalid", errors: parsed.errors, values: raw(fd) as Record<string, string | string[]> };
+  const locale = z.enum(routing.locales).catch(routing.defaultLocale).parse(fd.get("locale"));
+  const r = await transaction((tx) => createCrash(tx, actor, parsed.value));
+  if (r.status !== "saved" || !r.crashId) return toState(r, fd);
+  redirect(`/${locale}/review/crashes/${r.crashId}`);
 }

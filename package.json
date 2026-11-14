@@ -30,6 +30,7 @@
     "db:queries": "tsx scripts/db/queries.ts",
     "db:places:download": "bash scripts/db/download-place-names.sh",
     "db:places": "tsx scripts/db/import-places.ts",
+    "db:seed": "tsx scripts/db/seed.ts",
     "db:pending": "tsx scripts/db/pending.ts",
     "contributors:avatars": "tsx scripts/contributors/fetch-avatars.ts",
     "users:role": "tsx scripts/db/set-role.ts",

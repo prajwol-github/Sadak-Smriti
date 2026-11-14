@@ -829,6 +829,11 @@
     "listMeta": "Crashes",
     "listHeading": "Crashes",
     "listIntro": "Every crash, public or draft. Open one to edit its facts, vehicles, sources and people.",
+    "createMeta": "New crash",
+    "createHeading": "New crash",
+    "createIntro": "Create a new crash record. It will be saved as a draft — add a source and publish it when ready.",
+    "createCrash": "New crash",
+    "createReason": "Why are you creating this record? (kept in the history)",
     "filter": {
       "all": "All",
       "published": "Public",

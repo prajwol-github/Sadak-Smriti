@@ -2,7 +2,7 @@
 
 import { useActionState } from "react";
 import { useTranslations } from "next-intl";
-import { addLink, publish, removePersonForm, saveFacts, savePersonForm } from "@/app/[locale]/review/crashes/actions";
+import { addLink, createCrashAction, publish, removePersonForm, saveFacts, savePersonForm } from "@/app/[locale]/review/crashes/actions";
 import { IDLE, type EditState } from "@/lib/forms/edit-state";
 
 /**
@@ -221,6 +221,65 @@ export function RemovePersonForm({ crashId, personId, version }: { crashId: stri
       <p className="mt-1 text-meta text-neutral-700">{t("removeNote")}</p>
       <Banner state={state} />
       <button type="submit" disabled={pending} className="btn btn-secondary mt-3 h-10 min-h-10 disabled:opacity-60">{t("remove")}</button>
+    </form>
+  );
+}
+
+// --- Create new crash -----------------------------------------------------------------------
+
+export function CreateCrashForm({ districts, locale }: { districts: { id: string; name: string }[]; locale: string }) {
+  const t = useTranslations("Edit");
+  const vt = useTranslations("Vehicle");
+  const [state, action, pending] = useEdit(createCrashAction);
+  const VEHICLES = ["bus", "microbus", "jeep", "car", "truck", "tipper", "tanker", "tractor", "motorcycle", "scooter", "e_rickshaw", "bicycle", "other"] as const;
+
+  const input = (name: string, label: string, props: React.InputHTMLAttributes<HTMLInputElement> = {}, defaultValue?: string | number | null, hint?: string) => (
+    <Field name={name} label={label} state={state} hint={hint}>
+      {({ bad, describedBy }) => <input name={name} defaultValue={typed(state, name, defaultValue == null ? "" : String(defaultValue))} aria-invalid={bad} aria-describedby={describedBy} className={`mt-1.5 ${inputCls(bad)}`} {...props} />}
+    </Field>
+  );
+
+  return (
+    <form action={action} className="mt-6">
+      <input type="hidden" name="locale" value={locale} />
+      <div className="grid gap-4 sm:grid-cols-2">
+        {input("titleEn", t("titleEn"), { maxLength: 200 })}
+        {input("titleNp", t("titleNp"), { maxLength: 200, lang: "ne" })}
+        {input("occurredOn", t("date"), { type: "date", required: true })}
+        {input("occurredTime", t("time"), { type: "time" })}
+        {input("placeNameEn", t("placeEn"), { maxLength: 200 })}
+        {input("placeNameNp", t("placeNp"), { maxLength: 200, lang: "ne" })}
+        <Field name="districtId" label={t("district")} state={state}>
+          {({ bad, describedBy }) => (
+            <select name="districtId" defaultValue={typed(state, "districtId", "")} aria-invalid={bad} aria-describedby={describedBy} className={`mt-1.5 ${inputCls(bad)}`}>
+              <option value="">{t("notSet")}</option>
+              {districts.map((d) => <option key={d.id} value={d.id}>{d.name}</option>)}
+            </select>
+          )}
+        </Field>
+        <div className="grid grid-cols-2 gap-4">
+          {input("deaths", t("deaths"), { inputMode: "numeric", required: true }, 0)}
+          {input("injured", t("injured"), { inputMode: "numeric" })}
+        </div>
+      </div>
+      <fieldset className="mt-4">
+        <legend className="text-small font-semibold">{t("vehicles")}</legend>
+        <div className="mt-2 flex flex-wrap gap-2">
+          {VEHICLES.map((v) => (
+            <label key={v} className="cursor-pointer">
+              <input type="checkbox" name="vehicles" value={v} defaultChecked={typedList(state, "vehicles", []).includes(v)} className="peer sr-only" />
+              <span className="flex min-h-11 items-center border-2 border-ink px-3.5 text-ui font-semibold peer-checked:bg-ink peer-checked:text-bg peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-accent">{vt(v)}</span>
+            </label>
+          ))}
+        </div>
+      </fieldset>
+      <div className="mt-4 max-w-xl">
+        <ReasonField state={state} version={0} label={t("createReason")} />
+      </div>
+      <Banner state={state} />
+      <button type="submit" disabled={pending} className="btn btn-primary mt-4 h-12 text-body disabled:opacity-60">
+        {pending ? t("saving") : t("createCrash")} →
+      </button>
     </form>
   );
 }

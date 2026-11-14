@@ -62,7 +62,14 @@ async function Crashes({ searchParams }: { searchParams: PageProps<"/[locale]/re
     <>
       <StaffNav current="crashes" canSeeAccounts={can(access.actor, "view_accounts").kind === "allow"} />
       <div className="mx-auto max-w-5xl px-4 py-8 lg:px-8">
-        <h1 className="text-[32px] lg:text-[44px]">{t("listHeading")}</h1>
+        <div className="flex flex-wrap items-baseline justify-between gap-4">
+          <h1 className="text-[32px] lg:text-[44px]">{t("listHeading")}</h1>
+          {can(access.actor, "create_crash").kind === "allow" && (
+            <Link href="/review/crashes/new" className="btn btn-primary h-11 text-ui">
+              {t("createCrash")} +
+            </Link>
+          )}
+        </div>
         <p className="mt-2 max-w-[72ch] text-body text-neutral-700">{t("listIntro")}</p>
 
         <nav aria-label={t("filterLabel")} className="mt-4 flex flex-wrap gap-2">

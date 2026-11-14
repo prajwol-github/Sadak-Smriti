@@ -179,6 +179,17 @@ Once staging is verified end-to-end, deploy production:
 /srv/sadak/production/app/scripts/deploy/deploy.sh production
 ```
 
+*(Optional) To populate initial factual crashes and verified victims into staging or production:*
+```bash
+# Staging:
+cd /srv/sadak/staging/app
+ENV_FILE=/srv/sadak/staging/.env.staging pnpm db:seed
+
+# Production:
+cd /srv/sadak/production/app
+ENV_FILE=/srv/sadak/production/.env.production pnpm db:seed
+```
+
 ---
 
 ## Part 6. Creating the First Staff Admin
