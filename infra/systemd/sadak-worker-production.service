@@ -1,0 +1,21 @@
+[Unit]
+Description=Sadak Smriti Production News Worker
+After=network-online.target docker.service sadak-web-production.service
+Wants=network-online.target
+
+[Service]
+User=sadak
+Group=sadak
+WorkingDirectory=/srv/sadak/production/app
+EnvironmentFile=/srv/sadak/production/.env.production
+Environment=NODE_ENV=production
+ExecStart=/usr/bin/pnpm worker
+Restart=always
+RestartSec=10
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+
+[Install]
+WantedBy=multi-user.target
+

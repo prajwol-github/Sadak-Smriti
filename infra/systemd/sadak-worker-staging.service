@@ -1,0 +1,21 @@
+[Unit]
+Description=Sadak Smriti Staging News Worker
+After=network-online.target docker.service sadak-web-staging.service
+Wants=network-online.target
+
+[Service]
+User=sadak
+Group=sadak
+WorkingDirectory=/srv/sadak/staging/app
+EnvironmentFile=/srv/sadak/staging/.env.staging
+Environment=NODE_ENV=production
+ExecStart=/usr/bin/pnpm worker
+Restart=always
+RestartSec=10
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+
+[Install]
+WantedBy=multi-user.target
+

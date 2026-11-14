@@ -1,0 +1,77 @@
+{
+  "version": 2,
+  "skills": {
+    "impeccable": {
+      "source": "pbakaus/impeccable",
+      "sourceType": "github",
+      "skillPath": ".agents/skills/impeccable/SKILL.md",
+      "computedHash": "ba6f33350863bd8138de222e55a7bf0f409ed329770a92e3db7535cbd2d0fb80"
+    },
+    "maplibre-pmtiles-patterns": {
+      "source": "maplibre/maplibre-agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/maplibre-pmtiles-patterns/SKILL.md",
+      "computedHash": "678174edca9879b3d4fc0d4682147a214151412e1431d5e8757cf15d67f5415b"
+    },
+    "maplibre-tile-sources": {
+      "source": "maplibre/maplibre-agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/maplibre-tile-sources/SKILL.md",
+      "computedHash": "3cfa8b4086156fa041c057cff5b9b3eec81a5bad0d02a0d26ffef9cbe5e51afb"
+    },
+    "ponytail": {
+      "source": "DietrichGebert/ponytail",
+      "sourceType": "github",
+      "skillPath": "skills/ponytail/SKILL.md",
+      "computedHash": "56d72677aca02689ac89bd48734e8c19b40ab86716d1257eaf5f1238b43cda6b"
+    },
+    "ponytail-audit": {
+      "source": "DietrichGebert/ponytail",
+      "sourceType": "github",
+      "skillPath": "skills/ponytail-audit/SKILL.md",
+      "computedHash": "20dca08a5d047285c61702d496317eb84f501bbd573a45f3c8f93fdb3cecde4c"
+    },
+    "ponytail-debt": {
+      "source": "DietrichGebert/ponytail",
+      "sourceType": "github",
+      "skillPath": "skills/ponytail-debt/SKILL.md",
+      "computedHash": "6bcafbbd5d7ab3c09fbe1b040c2c8f3d0aae3c7e6e24339be253af354ab5cacd"
+    },
+    "ponytail-gain": {
+      "source": "DietrichGebert/ponytail",
+      "sourceType": "github",
+      "skillPath": "skills/ponytail-gain/SKILL.md",
+      "computedHash": "8dc7d5a5314e0720ff2e2b740486314b4607765181ede820f6b7e86a3d5fd814"
+    },
+    "ponytail-help": {
+      "source": "DietrichGebert/ponytail",
+      "sourceType": "github",
+      "skillPath": "skills/ponytail-help/SKILL.md",
+      "computedHash": "decfe28950443ddc04cf06badab1ebe325d149bc7dccdd3ce43ff8be27d92103"
+    },
+    "ponytail-review": {
+      "source": "DietrichGebert/ponytail",
+      "sourceType": "github",
+      "skillPath": "skills/ponytail-review/SKILL.md",
+      "computedHash": "fe7b781db99ce79d931cdc798b3fbccd84b82538de4a3fc5f6d9d466946d1458"
+    },
+    "postgis": {
+      "source": "postgis/postgis",
+      "sourceType": "github",
+      "skillPath": "doc/skills/postgis/SKILL.md",
+      "computedHash": "8bc772b0cf02bada628d97d9f17d72a941e60f89a8deefde48e2964db835e799"
+    },
+    "security-audit": {
+      "source": "cloudflare/security-audit-skill",
+      "sourceType": "github",
+      "skillPath": "skills/security-audit/SKILL.md",
+      "computedHash": "8513eb3b2c39b8d05ef4f47b32ef4d18280b93a5efb91d8df6272f7435034af5"
+    },
+    "vercel-react-best-practices": {
+      "source": "vercel-labs/agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/react-best-practices/SKILL.md",
+      "computedHash": "7991ed4fbecdac23f47c1a40c243e00a212a9e7f3604db93959b3ae11dffe299"
+    }
+  }
+}

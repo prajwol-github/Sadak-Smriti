@@ -1,0 +1,29 @@
+# Development database: PostgreSQL 18 + PostGIS 3.6 (PLAN P0-04, ADR 0005).
+# Start with `pnpm db:up` (reads .env.local). Listens on localhost only.
+name: sadak-smriti
+
+services:
+  postgres:
+    image: postgis/postgis:18-3.6
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:${DB_PORT:-5433}:5432"
+    environment:
+      POSTGRES_DB: sadak
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env.local}
+      # Read by infra/db/init-roles.sh on first start only.
+      MIGRATOR_PASSWORD: ${MIGRATOR_PASSWORD:?set MIGRATOR_PASSWORD in .env.local}
+      APP_PASSWORD: ${APP_PASSWORD:?set APP_PASSWORD in .env.local}
+      READONLY_PASSWORD: ${READONLY_PASSWORD:?set READONLY_PASSWORD in .env.local}
+    volumes:
+      - pgdata:/var/lib/postgresql
+      - ./db/init-roles.sh:/docker-entrypoint-initdb.d/10-init-roles.sh:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d sadak"]
+      interval: 2s
+      timeout: 3s
+      retries: 30
+
+volumes:
+  pgdata:

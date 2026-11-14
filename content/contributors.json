@@ -1,0 +1,104 @@
+{
+  "contributors": [
+    {
+      "handle": "sample-asha",
+      "name": {
+        "en": "Asha Example",
+        "ne": "आशा उदाहरण"
+      },
+      "roles": [
+        "code",
+        "design"
+      ],
+      "bio": {
+        "en": "Built the map and the data charts.",
+        "ne": "नक्सा र तथ्यांकका चार्ट बनाइन्।"
+      },
+      "github": "octocat",
+      "website": "https://example.org/",
+      "since": "2026-11-01",
+      "highlights": {
+        "commits": 128,
+        "months": 1
+      },
+      "sample": true,
+      "photo": "/contributors/sample-asha.png"
+    },
+    {
+      "handle": "sample-bikash",
+      "name": {
+        "en": "Bikash Example",
+        "ne": "विकास उदाहरण"
+      },
+      "roles": [
+        "review",
+        "translation"
+      ],
+      "bio": {
+        "en": "Checks news reports every evening and translates them into English.",
+        "ne": "हरेक साँझ समाचार जाँच्छन् र अङ्ग्रेजीमा अनुवाद गर्छन्।"
+      },
+      "linkedin": "https://www.linkedin.com/in/example/",
+      "since": "2026-10-20",
+      "highlights": {
+        "reviews": 42,
+        "translations": 17
+      },
+      "sample": true
+    },
+    {
+      "handle": "sample-chandra",
+      "name": {
+        "en": "Chandra Example",
+        "ne": "चन्द्र उदाहरण"
+      },
+      "roles": [
+        "volunteer",
+        "data"
+      ],
+      "bio": {
+        "en": "Collects police bulletins for the district comparison.",
+        "ne": "जिल्ला तुलनाका लागि प्रहरीका सूचना सङ्कलन गर्छन्।"
+      },
+      "since": "2026-10-28",
+      "highlights": {
+        "reports": 23
+      },
+      "sample": true
+    },
+    {
+      "handle": "sample-dipa",
+      "name": {
+        "en": "Dipa Example",
+        "ne": "दीपा उदाहरण"
+      },
+      "roles": [
+        "donor"
+      ],
+      "since": "2026-11-05",
+      "sample": true
+    },
+    {
+      "handle": "sample-ekraj",
+      "name": {
+        "en": "Ekraj Example",
+        "ne": "एकराज उदाहरण"
+      },
+      "roles": [
+        "code",
+        "review"
+      ],
+      "bio": {
+        "en": "Wrote the report form's flood limits.",
+        "ne": "जानकारी फारमको सीमा प्रणाली लेखे।"
+      },
+      "since": "2026-11-08",
+      "highlights": {
+        "commits": 37,
+        "reviews": 9
+      },
+      "sample": true
+    }
+  ],
+  "anonymousDonors": 3
+}

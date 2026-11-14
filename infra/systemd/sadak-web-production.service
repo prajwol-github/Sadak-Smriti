@@ -1,0 +1,23 @@
+[Unit]
+Description=Sadak Smriti Production Website
+After=network-online.target docker.service
+Wants=network-online.target
+
+[Service]
+User=sadak
+Group=sadak
+WorkingDirectory=/srv/sadak/production/app/.next/standalone
+EnvironmentFile=/srv/sadak/production/.env.production
+Environment=NODE_ENV=production
+Environment=PORT=3000
+Environment=HOSTNAME=127.0.0.1
+ExecStart=/usr/bin/node server.js
+Restart=always
+RestartSec=3
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+
+[Install]
+WantedBy=multi-user.target
+

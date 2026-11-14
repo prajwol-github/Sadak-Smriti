@@ -1,0 +1,64 @@
+# dependencies
+node_modules/
+__pycache__/
+/.pnp
+.pnp.*
+
+# testing
+/coverage
+/test-results/
+/playwright-report/
+/playwright/.cache/
+
+# next.js
+/.next/
+/out/
+/build
+
+# misc
+.DS_Store
+Thumbs.db
+
+# certificates, keys and database backups
+*.pem
+*.key
+*.dump
+/backups/
+/certs/
+
+# debug
+npm-debug.log*
+.pnpm-debug.log*
+
+# env files: only example templates are committed
+.env*
+!.env.example
+!.env.*.example
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
+
+# --- Real people's data from the feasibility spike (PLAN P0-02) ---
+# These hold copyrighted article text and real victims' names. Never commit them.
+spike/articles/
+spike/extractions*.json
+spike/extractions_manual.py
+spike/rss_candidates.json
+spike/viewer.html
+spike/shots/
+spike/embeds/shots/
+spike/embeds/resolved.json
+spike/.venv/
+spike/__pycache__/
+
+# --- Map build: downloaded sources and large generated tiles ---
+# Rebuilt by `pnpm map:build`; the basemap PMTiles is too large for git.
+/data/raw/
+/public/tiles/*.pmtiles
+
+# --- Impeccable runtime folders (they also ignore themselves) ---
+.impeccable/questions/
+.impeccable/mocks/
+.impeccable/review/
+.impeccable/config.local.json

@@ -1,0 +1,4 @@
+# Shell scripts run inside Linux containers: keep LF line endings on every OS.
+*.sh text eol=lf
+# Migrations and query snapshots are compared byte for byte by tests.
+*.sql text eol=lf

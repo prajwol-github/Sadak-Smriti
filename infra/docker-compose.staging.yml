@@ -1,0 +1,30 @@
+# Staging database: PostgreSQL 18 + PostGIS 3.6
+# Start with `docker compose -f infra/docker-compose.staging.yml --env-file /srv/sadak/staging/.env.staging up -d --wait`
+name: sadak-staging
+
+services:
+  postgres:
+    image: postgis/postgis:18-3.6
+    container_name: sadak-postgres-staging
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:${DB_PORT:-5434}:5432"
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-sadak_staging}
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in environment file}
+      MIGRATOR_PASSWORD: ${MIGRATOR_PASSWORD:?set MIGRATOR_PASSWORD in environment file}
+      APP_PASSWORD: ${APP_PASSWORD:?set APP_PASSWORD in environment file}
+      READONLY_PASSWORD: ${READONLY_PASSWORD:?set READONLY_PASSWORD in environment file}
+    volumes:
+      - pgdata-staging:/var/lib/postgresql
+      - ./db/init-roles.sh:/docker-entrypoint-initdb.d/10-init-roles.sh:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d ${POSTGRES_DB:-sadak_staging}"]
+      interval: 2s
+      timeout: 3s
+      retries: 30
+
+volumes:
+  pgdata-staging:
+

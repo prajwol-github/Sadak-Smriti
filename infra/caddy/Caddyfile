@@ -1,0 +1,66 @@
+# Caddyfile for Sadak Smriti (Production + Staging)
+# Installed to /etc/caddy/Caddyfile
+
+# --- Production Environment ---
+example.org, www.example.org {
+	tls /etc/caddy/certs/origin-production.pem /etc/caddy/certs/origin-production.key
+	encode zstd gzip
+
+	header {
+		Strict-Transport-Security "max-age=31536000; includeSubDomains"
+		X-Content-Type-Options "nosniff"
+		X-Frame-Options "DENY"
+		Referrer-Policy "strict-origin-when-cross-origin"
+		Permissions-Policy "camera=(), microphone=(), geolocation=(self)"
+		-Server
+	}
+
+	request_body {
+		max_size 2MB
+	}
+
+	# Basemap tiles: PMTiles format with range request support
+	handle /tiles/* {
+		root * /srv/sadak/production/app/public
+		header Cache-Control "public, max-age=86400, stale-while-revalidate=604800"
+		file_server
+	}
+
+	handle {
+		reverse_proxy 127.0.0.1:3000 {
+			# Real visitor address as verified by Cloudflare
+			header_up X-Forwarded-For {http.request.header.CF-Connecting-IP}
+		}
+	}
+}
+
+# --- Staging Environment ---
+staging.example.org {
+	tls /etc/caddy/certs/origin-staging.pem /etc/caddy/certs/origin-staging.key
+	encode zstd gzip
+
+	header {
+		X-Content-Type-Options "nosniff"
+		X-Frame-Options "DENY"
+		Referrer-Policy "strict-origin-when-cross-origin"
+		Permissions-Policy "camera=(), microphone=(), geolocation=(self)"
+		-Server
+	}
+
+	request_body {
+		max_size 2MB
+	}
+
+	handle /tiles/* {
+		root * /srv/sadak/staging/app/public
+		header Cache-Control "public, max-age=86400, stale-while-revalidate=604800"
+		file_server
+	}
+
+	handle {
+		reverse_proxy 127.0.0.1:3001 {
+			header_up X-Forwarded-For {http.request.header.CF-Connecting-IP}
+		}
+	}
+}
+

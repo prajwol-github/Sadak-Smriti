@@ -1,0 +1,11 @@
+allowBuilds:
+  '@parcel/watcher': false
+  '@swc/core': false
+  esbuild: false
+  sharp: false
+  unrs-resolver: false
+minimumReleaseAgeExclude:
+  - icu-minify@4.15.1
+  - next-intl-swc-plugin-extractor@4.15.1
+  - next-intl@4.15.1
+  - use-intl@4.15.1

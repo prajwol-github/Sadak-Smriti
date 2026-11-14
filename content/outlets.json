@@ -1,0 +1,13 @@
+{
+  "$comment": "News outlets the worker polls (SPEC 7.2). Each feed URL was checked on 14 Nov 2026. After editing, run `pnpm pipeline:outlets` to update the database. Set enabled to false to stop polling an outlet without losing its history.",
+  "outlets": [
+    { "slug": "onlinekhabar-ne", "name": "Onlinekhabar", "language": "ne", "feedUrl": "https://www.onlinekhabar.com/feed", "enabled": true },
+    { "slug": "onlinekhabar-en", "name": "Onlinekhabar English", "language": "en", "feedUrl": "https://english.onlinekhabar.com/feed", "enabled": true },
+    { "slug": "setopati", "name": "Setopati", "language": "ne", "feedUrl": "https://www.setopati.com/feed", "enabled": true },
+    { "slug": "ratopati", "name": "Ratopati", "language": "ne", "feedUrl": "https://www.ratopati.com/feed", "enabled": true },
+    { "slug": "kathmandu-post", "name": "The Kathmandu Post", "language": "en", "feedUrl": "https://kathmandupost.com/rss", "enabled": true },
+    { "slug": "nepalnews", "name": "Nepalnews", "language": "en", "feedUrl": "https://nepalnews.com/feed/", "enabled": true },
+    { "slug": "khabarhub-ne", "name": "Khabarhub", "language": "ne", "feedUrl": "https://khabarhub.com/feed/", "enabled": true },
+    { "slug": "khabarhub-en", "name": "Khabarhub English", "language": "en", "feedUrl": "https://english.khabarhub.com/feed/", "enabled": true }
+  ]
+}
