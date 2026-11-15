@@ -8,7 +8,7 @@ services:
     container_name: sadak-postgres-production
     restart: unless-stopped
     ports:
-      - "127.0.0.1:${DB_PORT:-5433}:5432"
+      - "${DB_BIND_IP:-127.0.0.1}:${DB_PORT:-5433}:5432"
     environment:
       POSTGRES_DB: ${POSTGRES_DB:-sadak}
       POSTGRES_USER: postgres
