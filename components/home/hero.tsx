@@ -1,6 +1,6 @@
 import { getLocale, getTranslations } from "next-intl/server";
 import { Link } from "@/lib/i18n/navigation";
-import { CityLayer, StaticMap } from "@/components/map/static-map";
+import { StaticMap } from "@/components/map/static-map";
 import { LiveMap } from "@/components/map/live-map";
 import { liveMapText } from "@/lib/map/live-text";
 import { CRASHES, HIGHWAY_RISK, HOME_STATS, LATEST, RECORDING_SINCE } from "@/lib/sample/data";
@@ -60,7 +60,6 @@ export async function HomeHero() {
             railClassName="absolute left-6 top-[240px]"
             expandHref="/map"
           >
-            <CityLayer tone="ink" className="w-[420px]" />
             <div className="absolute inset-[150px_220px_24px_96px]">
               <StaticMap {...mapProps} pxPerUnit={1.45} tag={{ lon: LATEST.lon, lat: LATEST.lat, text: tagText }} />
             </div>
@@ -118,7 +117,6 @@ export async function HomeHero() {
         </div>
         <div className="relative h-[250px] overflow-hidden">
           <LiveMap {...live} view={{ kind: "country", padding: { top: 16, right: 16, bottom: 20, left: 8 } }} cooperativeGestures rail="compact" railClassName="absolute left-3 top-3">
-            <CityLayer tone="ink" className="w-[140px]" />
             <div className="absolute inset-[16px_16px_20px_8px]">
               <StaticMap {...mapProps} labels={false} pxPerUnit={0.48} />
             </div>
