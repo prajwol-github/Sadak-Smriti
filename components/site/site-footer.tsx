@@ -2,7 +2,7 @@ import { getTranslations } from "next-intl/server";
 import { Link } from "@/lib/i18n/navigation";
 
 /** Footer row (README Home section 6), plus the sample-data notice while sample data is shown. */
-export async function SiteFooter({ sample = true }: { sample?: boolean }) {
+export async function SiteFooter({ sample = process.env.SAMPLE_DATA === "1" }: { sample?: boolean }) {
   const t = await getTranslations("Footer");
   const site = await getTranslations("Site");
   const links: [string, string][] = [

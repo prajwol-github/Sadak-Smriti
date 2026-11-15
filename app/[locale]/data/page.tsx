@@ -31,7 +31,7 @@ export default async function DataPage() {
   const n = (v: number) => fmtNum(v, locale);
 
   const filters = [
-    [t("period"), t("periodValue")], [t("province"), t("provinceAll")], [t("district"), t("districtAll")],
+    [t("province"), t("provinceAll")], [t("district"), t("districtAll")],
     [t("highway"), t("highwayAll")], [t("vehicle"), t("vehicleAll")], [t("crashType"), t("crashTypeAll")],
   ];
 
