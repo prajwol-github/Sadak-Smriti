@@ -1,27 +1,24 @@
 {
   "contributors": [
     {
-      "handle": "sample-asha",
+      "handle": "prajwol-shrestha",
       "name": {
-        "en": "Asha Example",
-        "ne": "आशा उदाहरण"
+        "en": "Prajwol Shrestha",
+        "ne": "प्रज्वल श्रेष्ठ"
       },
       "roles": [
-        "code",
-        "design"
+        "code"
       ],
       "bio": {
-        "en": "Built the map and the data charts.",
-        "ne": "नक्सा र तथ्यांकका चार्ट बनाइन्।"
+        "en": "Contributed to the development of Sadak, including its mapping features, data visualization, and platform development.",
+        "ne": "सडकको विकास, नक्साङ्कन, तथ्याङ्क दृश्याङ्कन तथा प्लेटफर्म निर्माणमा योगदान।"
       },
-      "github": "octocat",
-      "website": "https://example.org/",
       "since": "2026-11-01",
       "highlights": {
         "commits": 128,
         "months": 1
       },
-      "sample": true,
+      "sample": false,
       "photo": "/contributors/sample-asha.png"
     },
     {
