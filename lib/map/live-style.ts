@@ -363,13 +363,14 @@ export function buildStyle(input: StyleInput): StyleSpecification {
   ];
 
   const origin_ = origin.replace(/\/$/, "");
+  const tilesOrigin = (process.env.NEXT_PUBLIC_TILES_ORIGIN || origin_).replace(/\/$/, "");
   return {
     version: 8,
     glyphs: `${origin_}/fonts/{fontstack}/{range}.pbf`,
     sources: {
       basemap: {
         type: "vector",
-        url: `pmtiles://${origin_}/tiles/nepal-basemap.pmtiles`,
+        url: `pmtiles://${tilesOrigin}/tiles/nepal-basemap.pmtiles`,
         attribution: ATTRIBUTION,
       },
       mask: { type: "geojson", data: `${origin_}/map/mask.geojson` },

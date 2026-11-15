@@ -23,9 +23,11 @@ ENV_FILE="$ENV_DIR/.env.$ENV"
 COMPOSE_FILE="$APP_DIR/infra/docker-compose.$ENV.yml"
 
 if [ "$ENV" = "production" ]; then
-  WEB_PORT=3000
+  BRANCH="releases/production"
+  WEB_PORT=3011
 else
-  WEB_PORT=3001
+  BRANCH="releases/stage"
+  WEB_PORT=3010
 fi
 
 # 1. Verify environment secrets file
@@ -46,8 +48,10 @@ cd "$APP_DIR"
 
 # 3. Pull latest changes if under git
 if [ -d ".git" ]; then
-  echo "==> Pulling latest changes from Git..."
-  git pull --ff-only
+  echo "==> Fetching and checking out branch [$BRANCH]..."
+  git fetch origin "$BRANCH"
+  git checkout "$BRANCH"
+  git pull --ff-only origin "$BRANCH"
 fi
 
 # 4. Install dependencies
