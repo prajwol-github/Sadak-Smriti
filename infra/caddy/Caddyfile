@@ -23,11 +23,15 @@ example.org, www.example.org {
 	handle /tiles/* {
 		root * /srv/sadak/production/app/public
 		header Cache-Control "public, max-age=86400, stale-while-revalidate=604800"
+		header Access-Control-Allow-Origin *
+		header Access-Control-Allow-Methods "GET, HEAD, OPTIONS"
+		header Access-Control-Allow-Headers "Range"
+		header Access-Control-Expose-Headers "Content-Range, Content-Length, Accept-Ranges"
 		file_server
 	}
 
 	handle {
-		reverse_proxy 127.0.0.1:3000 {
+		reverse_proxy 127.0.0.1:3011 {
 			# Real visitor address as verified by Cloudflare
 			header_up X-Forwarded-For {http.request.header.CF-Connecting-IP}
 		}
@@ -54,11 +58,15 @@ staging.example.org {
 	handle /tiles/* {
 		root * /srv/sadak/staging/app/public
 		header Cache-Control "public, max-age=86400, stale-while-revalidate=604800"
+		header Access-Control-Allow-Origin *
+		header Access-Control-Allow-Methods "GET, HEAD, OPTIONS"
+		header Access-Control-Allow-Headers "Range"
+		header Access-Control-Expose-Headers "Content-Range, Content-Length, Accept-Ranges"
 		file_server
 	}
 
 	handle {
-		reverse_proxy 127.0.0.1:3001 {
+		reverse_proxy 127.0.0.1:3010 {
 			header_up X-Forwarded-For {http.request.header.CF-Connecting-IP}
 		}
 	}
